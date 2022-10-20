@@ -3,7 +3,7 @@ pragma solidity ^0.8.13;
 
 contract GroceryShop{
 
-    enum Grocery{
+    enum GroceryType{
         None,
         Bread,
         Egg,
@@ -13,20 +13,20 @@ contract GroceryShop{
     address payable public owner;
     mapping(uint => uint) groceryRegistry;
 
-    uint256 orderNumber=1;
+    uint256 purchaseId=1;
 
-    event Added(Grocery grocery, uint256 unit);
-    event Bought(uint256 purchaseId, Grocery grocery, uint256 unit);
+    event Added(GroceryType grocery, uint256 units);
+    event Bought(uint256 purchaseId, GroceryType grocery, uint256 units);
 
     error NotEnoughMoney(uint256 requested,uint256 available);
-    error InvalidQuantityEntered(uint256 amount);
-    error NotEnoughQuantityInGroceryStore(uint256 amount);
-    error InvalidGrocerySelected(Grocery grocery);
+    error InvalidQuantityEntered(uint256 units);
+    error NotEnoughQuantityInGroceryStore(uint256 units);
+    error InvalidGrocerySelected(GroceryType grocery);
 
     constructor(uint256 _breadCount, uint256  _eggCount, uint256 _jamCount){
-        groceryRegistry[uint256(Grocery.Bread)] = _breadCount;
-        groceryRegistry[uint256(Grocery.Egg)]   = _eggCount;
-        groceryRegistry[uint256(Grocery.Jam)]   = _jamCount;
+        groceryRegistry[uint256(GroceryType.Bread)] = _breadCount;
+        groceryRegistry[uint256(GroceryType.Egg)]   = _eggCount;
+        groceryRegistry[uint256(GroceryType.Jam)]   = _jamCount;
         owner = payable(msg.sender) ;
     }
 
@@ -42,8 +42,8 @@ contract GroceryShop{
         _;
     }
 
-    modifier validGrocery(Grocery _grocery){
-        if( _grocery!=Grocery.Bread && _grocery!=Grocery.Egg && _grocery!=Grocery.Jam ){
+    modifier validGrocery(GroceryType _grocery){
+        if( _grocery!=GroceryType.Bread && _grocery!=GroceryType.Egg && _grocery!=GroceryType.Jam ){
             revert InvalidGrocerySelected(_grocery);
         }
         _;
@@ -53,34 +53,34 @@ contract GroceryShop{
         return address(this).balance;
     }
     function getBreadQuantity() view external returns (uint256){
-        return groceryRegistry[uint256(Grocery.Bread)];
+        return groceryRegistry[uint256(GroceryType.Bread)];
     }
     function getEggQuantity() view external returns (uint256){
-        return groceryRegistry[uint256(Grocery.Egg)];
+        return groceryRegistry[uint256(GroceryType.Egg)];
     }
     function getJamQuantity() view external returns (uint256){
-        return groceryRegistry[uint256(Grocery.Jam)];
+        return groceryRegistry[uint256(GroceryType.Jam)];
     }
 
-    function add(Grocery _grocery, uint256 unit) onlyOwner validGrocery(_grocery)  external  {
-        if(unit<=0){
-            revert InvalidQuantityEntered(unit);
+    function add(GroceryType _grocery, uint256 units) onlyOwner validGrocery(_grocery)  external  {
+        if(units<=0){
+            revert InvalidQuantityEntered(units);
         }
-        groceryRegistry[uint256(_grocery)] += unit;
-        emit Added(_grocery,unit);
+        groceryRegistry[uint256(_grocery)] += units;
+        emit Added(_grocery,units);
     }
 
-    function buy(Grocery _grocery, uint256 unit) validGrocery(_grocery) notEnoughMoney(unit) external payable {
+    function buy(GroceryType _grocery, uint256 units) validGrocery(_grocery) notEnoughMoney(units) external payable {
         
-        if(unit<=0){
-            revert InvalidQuantityEntered(unit);
+        if(units<=0){
+            revert InvalidQuantityEntered(units);
         }
-        if(unit>groceryRegistry[uint256(_grocery)]){
-            revert NotEnoughQuantityInGroceryStore(unit);
+        if(units>groceryRegistry[uint256(_grocery)]){
+            revert NotEnoughQuantityInGroceryStore(units);
         }
-        groceryRegistry[uint256(_grocery)] -= unit;
-        emit Bought(orderNumber,_grocery, unit);
-        orderNumber+=1;
+        groceryRegistry[uint256(_grocery)] -= units;
+        emit Bought(purchaseId,_grocery, units);
+        purchaseId+=1;
 
     }
 
