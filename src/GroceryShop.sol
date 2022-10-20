@@ -11,7 +11,7 @@ contract GroceryShop{
     }
 
     address payable public owner;
-    mapping(uint => uint) groceryRegistry;
+    mapping(uint => uint) cashRegister;
 
     uint256 purchaseId=1;
 
@@ -24,9 +24,9 @@ contract GroceryShop{
     error InvalidGrocerySelected(GroceryType grocery);
 
     constructor(uint256 _breadCount, uint256  _eggCount, uint256 _jamCount){
-        groceryRegistry[uint256(GroceryType.Bread)] = _breadCount;
-        groceryRegistry[uint256(GroceryType.Egg)]   = _eggCount;
-        groceryRegistry[uint256(GroceryType.Jam)]   = _jamCount;
+        cashRegister[uint256(GroceryType.Bread)] = _breadCount;
+        cashRegister[uint256(GroceryType.Egg)]   = _eggCount;
+        cashRegister[uint256(GroceryType.Jam)]   = _jamCount;
         owner = payable(msg.sender) ;
     }
 
@@ -53,20 +53,20 @@ contract GroceryShop{
         return address(this).balance;
     }
     function getBreadQuantity() view external returns (uint256){
-        return groceryRegistry[uint256(GroceryType.Bread)];
+        return cashRegister[uint256(GroceryType.Bread)];
     }
     function getEggQuantity() view external returns (uint256){
-        return groceryRegistry[uint256(GroceryType.Egg)];
+        return cashRegister[uint256(GroceryType.Egg)];
     }
     function getJamQuantity() view external returns (uint256){
-        return groceryRegistry[uint256(GroceryType.Jam)];
+        return cashRegister[uint256(GroceryType.Jam)];
     }
 
     function add(GroceryType _grocery, uint256 units) onlyOwner validGrocery(_grocery)  external  {
         if(units<=0){
             revert InvalidQuantityEntered(units);
         }
-        groceryRegistry[uint256(_grocery)] += units;
+        cashRegister[uint256(_grocery)] += units;
         emit Added(_grocery,units);
     }
 
@@ -75,10 +75,10 @@ contract GroceryShop{
         if(units<=0){
             revert InvalidQuantityEntered(units);
         }
-        if(units>groceryRegistry[uint256(_grocery)]){
+        if(units>cashRegister[uint256(_grocery)]){
             revert NotEnoughQuantityInGroceryStore(units);
         }
-        groceryRegistry[uint256(_grocery)] -= units;
+        cashRegister[uint256(_grocery)] -= units;
         emit Bought(purchaseId,_grocery, units);
         purchaseId+=1;
 
