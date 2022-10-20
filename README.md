@@ -58,7 +58,7 @@ Complete this contract with following specifications for each function
 
 - Paste the code from Remix to `src/GroceryShop.sol` file.
 
-- Replace `0x97cb580e388518ba0c647c19c42d1352b2f89cf9` with your contract address at the end of this README file.
+- Replace `0x5419E2F6c55999192f6820154ee6c7AC0E8F48A2` with your contract address at the end of this README file.
 
 - Commit and push your changes.
 
@@ -72,4 +72,4 @@ Complete this contract with following specifications for each function
 
 ## Contract Address
 
-0x97cb580e388518ba0c647c19c42d1352b2f89cf9
+0x5419E2F6c55999192f6820154ee6c7AC0E8F48A2
