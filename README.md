@@ -55,7 +55,7 @@ Complete the following tests in `test/PetPark.t.sol`
 -   Clone this repo. Use the flag `--recurse-submodules` to clone the repo along with the submodules. You can use the following command after replacing the `CLONE_URL` with the clone url of your repo
 
     ```
-    git clone --recurse-submodules CLONE_URL
+    git clone --recurse-submodules https://github.com/DappCamp-Assignments/3bca683ad15abe4772338bcb2ca715585bc13c3572b27ce5f846a1cb513321ab.git
     ```
 
 -   Install `forge-std` library using the below command
@@ -66,7 +66,7 @@ Complete the following tests in `test/PetPark.t.sol`
 -   Create a new branch with your name. You can use the following command
 
     ```
-    git checkout -b my-name
+    git checkout -b satyajeet-sindhiyani
     ```
 
 -   Make changes to the `src/PetPark.sol` file. The tests in `test/PetPark.t.sol` should run successfully.
