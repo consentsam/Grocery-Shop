@@ -56,10 +56,9 @@ contract PetPark {
 
     // add
     function add(AnimalType _animal, uint256 _animalCount) external onlyOwner {
-        require(
-            (uint256(_animal) >= 1 && uint256(_animal) <= 5),
-            "Invalid animal"
-        );
+        if (uint256(_animal) < 1 || uint256(_animal) > 5) {
+            revert("Invalid animal");
+        }
         animalCounts[_animal] += _animalCount;
         emit Added(_animal, _animalCount);
     }
@@ -71,11 +70,12 @@ contract PetPark {
         AnimalType _animal
     ) external {
         if (userDetails[msg.sender].queriedBefore == true) {
-            require(userDetails[msg.sender].age == _age, "Invalid Age");
-            require(
-                userDetails[msg.sender].gender == _gender,
-                "Invalid Gender"
-            );
+            if (userDetails[msg.sender].age != _age) {
+                revert("Invalid Age");
+            }
+            if (userDetails[msg.sender].gender != _gender) {
+                revert("Invalid Gender");
+            }
         } else {
             userDetails[msg.sender] = UserDetails(
                 msg.sender,
@@ -84,15 +84,16 @@ contract PetPark {
                 true
             );
         }
-        require(
-            _age > 0,
-            "You cannot borrow since you are not even a year old"
-        );
-        require(
-            uint256(_animal) >= 1 && uint256(_animal) <= 5,
-            "Invalid animal type"
-        );
-        require(animalCounts[_animal] > 0, "Selected animal not available");
+        if (_age == 0) {
+            //TODO: Change the error message
+            revert("You cannot borrow since you are not even a year old");
+        }
+        if (uint256(_animal) < 1 || uint256(_animal) > 5) {
+            revert("Invalid animal type");
+        }
+        if (animalCounts[_animal] == 0) {
+            revert("Selected animal not available");
+        }
         if (borrowedAnimal[msg.sender] == AnimalType.None) {
             if (_gender == Gender.Male) {
                 if (_animal == AnimalType.Dog || _animal == AnimalType.Fish) {
@@ -118,12 +119,12 @@ contract PetPark {
 
     //giveBackAnimal
     function giveBackAnimal() external {
-        require(
-            borrowedAnimal[msg.sender] != AnimalType.None,
-            "No borrowed pets"
-        );
-        animalCounts[borrowedAnimal[msg.sender]] += 1;
-        emit Returned(borrowedAnimal[msg.sender]);
-        borrowedAnimal[msg.sender] = AnimalType.None;
+        if (borrowedAnimal[msg.sender] == AnimalType.None) {
+            revert("No borrowed pets");
+        } else {
+            animalCounts[borrowedAnimal[msg.sender]] += 1;
+            emit Returned(borrowedAnimal[msg.sender]);
+            borrowedAnimal[msg.sender] = AnimalType.None;
+        }
     }
 }

@@ -119,7 +119,7 @@ contract PetPark {
     //giveBackAnimal
     function giveBackAnimal() external {
         require(
-            borrowedAnimal[msg.sender] != AnimalType.None,
+            borrowedAnimal[msg.sender] == AnimalType.None,
             "No borrowed pets"
         );
         animalCounts[borrowedAnimal[msg.sender]] += 1;
