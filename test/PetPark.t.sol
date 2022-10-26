@@ -51,10 +51,6 @@ contract PetParkTest is Test, PetPark {
 
         vm.expectRevert("You cannot borrow since you are not even a year old");
         petPark.borrow(0, Gender.Male, AnimalType.Fish);
-
-        vm.expectRevert("You cannot borrow since you are not even a year old");
-        petPark.borrow(0, Gender.Female, AnimalType.Fish);
-
         // assert(false);
     }
 
